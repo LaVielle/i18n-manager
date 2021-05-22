@@ -1,0 +1,22 @@
+{
+  "en": {
+    "Food": {
+      "meat": "Meat",
+      "cheese": "Cheese"
+    },
+    "Work": {
+      "computer": "Computer",
+      "job": "Job"
+    }
+  },
+  "de": {
+    "Food": {
+      "meat": "Fleich",
+      "cheese": "Kase"
+    },
+    "Work": {
+      "computer": "Komputer",
+      "job": "Arbeit"
+    }
+  }
+}
