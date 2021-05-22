@@ -2,21 +2,39 @@
   "en": {
     "Food": {
       "meat": "Meat",
-      "cheese": "Cheese"
+      "cheese": "Cheese",
+      "bread": "Bread",
+      "apple": "Apple"
     },
     "Work": {
       "computer": "Computer",
-      "job": "Job"
+      "job": "Job",
+      "boss": "Boss",
+      "colleague": "Colleague"
+    },
+    "Sports": {
+      "football": "Soccer",
+      "pingPong": "Ping pong",
+      "ski": "Ski"
     }
   },
   "de": {
     "Food": {
       "meat": "Fleich",
-      "cheese": "Kase"
+      "cheese": "Kase",
+      "bread": "Brot",
+      "apple": "Apfel"
     },
     "Work": {
       "computer": "Komputer",
-      "job": "Arbeit"
+      "job": "Arbeit",
+      "boss": "Chef",
+      "colleague": "Kollege"
+    },
+    "Sports": {
+      "football": "Fussball",
+      "pingPong": "Tischtennis",
+      "ski": "Ski"
     }
   }
 }
