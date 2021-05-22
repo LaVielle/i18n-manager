@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
-import translations from '../data.json'
+// import translations from '../data.json'
+import translations from '../data-long.json'
 import { flattenObject } from '../utils/flattenObject'
 
 const normalizeDataShape = (flatObject: { [key: string]: string }) => {
@@ -46,28 +47,49 @@ export default function Index() {
   const flatTranslations = flattenObject(translations)
   const formatted = normalizeDataShape(flatTranslations)
 
+  const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({}).current
+
+  const scrollToNamespaceSection = (namespace: string) => {
+    const sectionId = `namespaceSection-${namespace}`
+
+    const sectionRef = sectionRefs[sectionId]
+    if (sectionRef) {
+      sectionRef.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <div className="flex flex-row">
-      <div className="h-screen w-56 bg-gray-800 p-8 overflow-scroll">
+      <div className="h-screen w-56 bg-gray-800 py-8 px-4 overflow-scroll space-y-2">
         {Object.keys(formatted).map((namespace) => (
-          <h1 key={`nameSpaceSidebar-${namespace}`} className="text-gray-100 text-xl mb-4">
-            {namespace}
-          </h1>
+          <button
+            key={`nameSpaceSidebar-${namespace}`}
+            onClick={() => scrollToNamespaceSection(namespace)}
+            className="px-4 py-1 rounded-md block hover:bg-gray-600"
+          >
+            <h1 className="text-gray-100 text-xl">{namespace}</h1>
+          </button>
         ))}
       </div>
 
-      <div className="flex flex-1 flex-col h-screen overflow-scroll p-8">
+      <div className="flex flex-1 flex-col h-screen overflow-scroll pb-8">
         {Object.keys(formatted).map((namespace, indexInNamespaces) => {
           const keysOfNamespace = Object.values(formatted)[indexInNamespaces]
 
+          const sectionId = `namespaceSection-${namespace}`
+
           return (
             <section
-              key={`namespaceSection-${namespace}`}
+              id={sectionId}
+              key={sectionId}
               className="pb-16 border-b-2 border-gray-300 mb-16"
+              ref={(r) => (sectionRefs[sectionId] = r)}
             >
-              <h2 className="text-4xl mb-4">{namespace}</h2>
+              <h2 className="text-4xl sticky top-0 py-4 px-8 mb-2 bg-white bg-opacity-95 shadow-md">
+                {namespace}
+              </h2>
 
-              <div className="space-y-8">
+              <div className="space-y-8 px-8">
                 {Object.keys(keysOfNamespace).map((key, indexInKeys) => {
                   const languagesOfKey = Object.values(keysOfNamespace)[indexInKeys]
 
@@ -86,7 +108,7 @@ export default function Index() {
                             key={`namespaceKeyLanguageSection-${namespace}-${key}-${language}-`}
                             className="flex items-center mt-4"
                           >
-                            <p className="mr-4 text-xl text-gray-700">{language}</p>
+                            <p className="w-12 text-xl text-gray-700">{language}</p>
                             <input
                               className="flex-1 border-2 p-4 rounded-md border-gray-300"
                               defaultValue={translation}
