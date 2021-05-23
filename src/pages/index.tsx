@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 
+import { KeyValueInput } from '../components/KeyValueInput'
 // import translations from '../data.json'
 import translations from '../data-long.json'
 import { flattenObject } from '../utils/flattenObject'
@@ -108,11 +109,10 @@ export default function Index() {
                             key={`namespaceKeyLanguageSection-${namespace}-${key}-${language}-`}
                             className="flex items-center mt-4"
                           >
-                            <p className="w-12 text-xl text-gray-700">{language}</p>
-                            <input
-                              className="flex-1 border-2 p-4 rounded-md border-gray-300"
-                              defaultValue={translation}
-                              onChange={(e) => console.log('onChange', e.target.value)}
+                            <KeyValueInput
+                              keyId={`${language}.${namespace}.${key}`}
+                              language={language}
+                              translation={translation}
                             />
                           </div>
                         )
