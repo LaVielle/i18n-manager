@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { useLocalStorage } from '../utils/useLocalStorage'
 
@@ -6,8 +6,9 @@ const allEditsKey = 'allEdits'
 
 type EditsContextType = {
   numberOfEdits: number
-  getEdits: () => void
+  allEdits: { [key: string]: string }
   setEdit: (key: string, value: string) => void
+  setSourceFlatTranslations: (data: { [key: string]: string }) => void
 }
 
 const EditsContext = React.createContext<EditsContextType>({} as EditsContextType)
@@ -15,24 +16,43 @@ const EditsContext = React.createContext<EditsContextType>({} as EditsContextTyp
 export const EditsContextProvider: React.FC = ({ children }) => {
   const [numberOfEdits, setNumberOfEdits] = useState(0)
 
-  const [allEdits, setAllEdits] = useLocalStorage(allEditsKey, {})
+  // state to hold the original translation file, as it was before edits
+  const [sourceFlatTranslations, setSourceFlatTranslations] = useState<{ [key: string]: string }>(
+    {}
+  )
 
-  const getEdits = () => {}
+  const [allEdits, setAllEdits] = useLocalStorage(allEditsKey, {})
+  const [keysWithRealDiff, setKeysWithRealDiff] = useState({})
 
   const setEdit = (key: string, value: string) => {
-    console.log({ key, value })
     setAllEdits({
       ...allEdits,
       [key]: value,
     })
   }
 
+  useEffect(() => {
+    const newKeysWithRealDiff = {}
+    Object.keys(allEdits).forEach((key) => {
+      if (allEdits[key] !== sourceFlatTranslations[key]) {
+        newKeysWithRealDiff[key] = allEdits[key]
+      }
+    })
+
+    setKeysWithRealDiff(newKeysWithRealDiff)
+  }, [allEdits])
+
+  useEffect(() => {
+    setNumberOfEdits(Object.keys(keysWithRealDiff).length)
+  }, [keysWithRealDiff])
+
   return (
     <EditsContext.Provider
       value={{
         numberOfEdits,
-        getEdits,
+        allEdits,
         setEdit,
+        setSourceFlatTranslations,
       }}
     >
       {children}

@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 
+import { EditsSummaryFooter } from '../components/EditsSummaryFooter'
 import { StickyNamespaceHeader } from '../components/StickyNamespaceHeader'
 import { TranslationBox } from '../components/TranslationBox'
 // import translations from '../data.json'
@@ -35,37 +36,40 @@ export default function Index() {
         ))}
       </div>
 
-      <div className="flex flex-1 flex-col h-screen overflow-scroll pb-8">
-        {Object.keys(formatted).map((namespace, indexInNamespaces) => {
-          const keysOfNamespace = Object.values(formatted)[indexInNamespaces]
+      <div className="flex flex-1 flex-col h-screen overflow-scroll">
+        <>
+          {Object.keys(formatted).map((namespace, indexInNamespaces) => {
+            const keysOfNamespace = Object.values(formatted)[indexInNamespaces]
 
-          const sectionId = `namespaceSection-${namespace}`
+            const sectionId = `namespaceSection-${namespace}`
 
-          return (
-            <section
-              id={sectionId}
-              key={sectionId}
-              className="pb-16 border-b-2 border-gray-300 mb-16"
-              ref={(r) => (sectionRefs[sectionId] = r)}
-            >
-              <StickyNamespaceHeader label={namespace} />
+            return (
+              <section
+                id={sectionId}
+                key={sectionId}
+                className="pb-16 border-b-2 border-gray-300 mb-16"
+                ref={(r) => (sectionRefs[sectionId] = r)}
+              >
+                <StickyNamespaceHeader label={namespace} />
 
-              <div className="space-y-8 px-8">
-                {Object.keys(keysOfNamespace).map((key) => {
-                  const keyId = `${namespace}.${key}`
-                  return (
-                    <TranslationBox
-                      key={keyId}
-                      keyId={keyId}
-                      keyLabel={key}
-                      translations={formatted[namespace][key]}
-                    />
-                  )
-                })}
-              </div>
-            </section>
-          )
-        })}
+                <div className="space-y-8 px-8">
+                  {Object.keys(keysOfNamespace).map((key) => {
+                    const keyId = `${namespace}.${key}`
+                    return (
+                      <TranslationBox
+                        key={keyId}
+                        keyId={keyId}
+                        keyLabel={key}
+                        translations={formatted[namespace][key]}
+                      />
+                    )
+                  })}
+                </div>
+              </section>
+            )
+          })}
+          <EditsSummaryFooter />
+        </>
       </div>
     </div>
   )
