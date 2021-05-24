@@ -1,6 +1,6 @@
+import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 
-import translations from '../data-long.json'
 import { flattenObject, normalizeDataShape, NormalizedObject } from '../utils/dataTransformers'
 import { useLocalStorage } from '../utils/useLocalStorage'
 
@@ -14,11 +14,14 @@ type EditsContextType = {
   setEdit: (key: string, value: string) => void
   mergedFlatTranslations: FlatObject
   formattedTranslations: NormalizedObject | null
+  addSourceFile: (translations: string) => void
 }
 
 const EditsContext = React.createContext<EditsContextType>({} as EditsContextType)
 
 export const EditsContextProvider: React.FC = ({ children }) => {
+  const router = useRouter()
+
   const [numberOfEdits, setNumberOfEdits] = useState(0)
 
   // state to hold the original translation file, as it was before edits
@@ -26,6 +29,14 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     'sourceFlatTranslations',
     {}
   )
+
+  useEffect(() => {
+    // Navigate to the start page if there is no source file yet
+    if (!Object.keys(sourceFlatTranslations).length && router.pathname !== '/start') {
+      router.push('start').then()
+    }
+  }, [sourceFlatTranslations])
+
   const [mergedFlatTranslations, setMergedFlatTranslations] = useState<FlatObject>({})
   const [formattedTranslations, setFormattedTranslations] = useState<NormalizedObject | null>(null)
 
@@ -33,20 +44,26 @@ export const EditsContextProvider: React.FC = ({ children }) => {
 
   const [keysWithRealDiff, setKeysWithRealDiff] = useState({})
 
-  useEffect(() => {
+  const addSourceFile = (translations: string) => {
     const flatSource = flattenObject(translations)
-
-    const merged = {
-      ...flatSource,
-      ...allEdits,
-    }
-
-    const formatted = normalizeDataShape(merged)
-
     setSourceFlatTranslations(flatSource)
-    setMergedFlatTranslations(merged)
-    setFormattedTranslations(formatted)
-  }, [])
+  }
+
+  useEffect(() => {
+    // Navigate to the start page if there is no source file yet
+    if (!Object.keys(sourceFlatTranslations).length && router.pathname !== '/start') {
+      router.push('start').then()
+    } else if (Object.keys(sourceFlatTranslations).length) {
+      const merged = {
+        ...sourceFlatTranslations,
+        ...allEdits,
+      }
+
+      const formatted = normalizeDataShape(merged)
+      setMergedFlatTranslations(merged)
+      setFormattedTranslations(formatted)
+    }
+  }, [sourceFlatTranslations])
 
   const setEdit = (key: string, value: string) => {
     setAllEdits((prevAllEdits) => ({
@@ -78,6 +95,7 @@ export const EditsContextProvider: React.FC = ({ children }) => {
         setEdit,
         mergedFlatTranslations,
         formattedTranslations,
+        addSourceFile,
       }}
     >
       {children}

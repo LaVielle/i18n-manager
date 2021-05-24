@@ -4,7 +4,6 @@ import { EditsSummaryFooter } from '../components/EditsSummaryFooter'
 import { StickyNamespaceHeader } from '../components/StickyNamespaceHeader'
 import { TranslationBox } from '../components/TranslationBox'
 import { useEdits } from '../context/Edits'
-// import translations from '../data.json'
 
 export default function Index() {
   const { formattedTranslations } = useEdits()
