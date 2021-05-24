@@ -3,12 +3,12 @@ import React from 'react'
 import { useEdits } from '../context/Edits'
 
 type Props = {
-  keyId: string
+  translationId: string
   language: string
   translation: string
 }
 
-export const KeyValueInput: React.FC<Props> = ({ keyId, language, translation }) => {
+export const TranslationInput: React.FC<Props> = ({ translationId, language, translation }) => {
   const { setEdit } = useEdits()
   return (
     <>
@@ -18,7 +18,7 @@ export const KeyValueInput: React.FC<Props> = ({ keyId, language, translation })
         defaultValue={translation}
         onChange={(e) => {
           console.log('onChange', e.target.value)
-          setEdit(keyId, e.target.value)
+          setEdit(translationId, e.target.value)
         }}
       />
     </>
