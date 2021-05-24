@@ -1,20 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { useEdits } from '../context/Edits'
-import translations from '../data-long.json'
-import { flattenObject } from '../utils/dataTransformers'
 import { ActionButton } from './ActionButton'
 
 export const EditsSummaryFooter: React.FC = () => {
   const { numberOfEdits } = useEdits()
-
-  const flatTranslations = flattenObject(translations)
-
-  const { setSourceFlatTranslations } = useEdits()
-
-  useEffect(() => {
-    setSourceFlatTranslations(flatTranslations)
-  }, [])
 
   if (!numberOfEdits) {
     return null

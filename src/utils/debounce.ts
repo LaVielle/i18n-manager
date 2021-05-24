@@ -22,6 +22,10 @@ export const debounce = (func: (...args: any[]) => void, wait: number): (() => v
 // useDebounce returns a function that can accept any number of params of any type
 type UseDebounce = (...args: any[]) => void
 
-export const useDebounce = (func: (...args: any[]) => void, wait: number): UseDebounce => {
-  return useCallback(debounce(func, wait), [])
+export const useDebounce = (
+  func: (...args: any[]) => void,
+  wait: number,
+  dependencies: any[] = []
+): UseDebounce => {
+  return useCallback(debounce(func, wait), dependencies)
 }

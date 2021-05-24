@@ -1,14 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react'
 
+import translations from '../data-long.json'
+import { flattenObject, normalizeDataShape, NormalizedObject } from '../utils/dataTransformers'
 import { useLocalStorage } from '../utils/useLocalStorage'
 
-const allEditsKey = 'allEdits'
+type FlatObject = {
+  [key: string]: string
+}
 
 type EditsContextType = {
   numberOfEdits: number
-  allEdits: { [key: string]: string }
+  allEdits: FlatObject
   setEdit: (key: string, value: string) => void
-  setSourceFlatTranslations: (data: { [key: string]: string }) => void
+  mergedFlatTranslations: FlatObject
+  formattedTranslations: NormalizedObject | null
 }
 
 const EditsContext = React.createContext<EditsContextType>({} as EditsContextType)
@@ -17,18 +22,37 @@ export const EditsContextProvider: React.FC = ({ children }) => {
   const [numberOfEdits, setNumberOfEdits] = useState(0)
 
   // state to hold the original translation file, as it was before edits
-  const [sourceFlatTranslations, setSourceFlatTranslations] = useState<{ [key: string]: string }>(
+  const [sourceFlatTranslations, setSourceFlatTranslations] = useLocalStorage(
+    'sourceFlatTranslations',
     {}
   )
+  const [mergedFlatTranslations, setMergedFlatTranslations] = useState<FlatObject>({})
+  const [formattedTranslations, setFormattedTranslations] = useState<NormalizedObject | null>(null)
 
-  const [allEdits, setAllEdits] = useLocalStorage(allEditsKey, {})
+  const [allEdits, setAllEdits] = useLocalStorage('allEdits', {})
+
   const [keysWithRealDiff, setKeysWithRealDiff] = useState({})
 
-  const setEdit = (key: string, value: string) => {
-    setAllEdits({
+  useEffect(() => {
+    const flatSource = flattenObject(translations)
+
+    const merged = {
+      ...flatSource,
       ...allEdits,
+    }
+
+    const formatted = normalizeDataShape(merged)
+
+    setSourceFlatTranslations(flatSource)
+    setMergedFlatTranslations(merged)
+    setFormattedTranslations(formatted)
+  }, [])
+
+  const setEdit = (key: string, value: string) => {
+    setAllEdits((prevAllEdits) => ({
+      ...prevAllEdits,
       [key]: value,
-    })
+    }))
   }
 
   useEffect(() => {
@@ -52,7 +76,8 @@ export const EditsContextProvider: React.FC = ({ children }) => {
         numberOfEdits,
         allEdits,
         setEdit,
-        setSourceFlatTranslations,
+        mergedFlatTranslations,
+        formattedTranslations,
       }}
     >
       {children}
@@ -60,7 +85,4 @@ export const EditsContextProvider: React.FC = ({ children }) => {
   )
 }
 
-export const useEdits = (): EditsContextType => {
-  const editsContext = useContext(EditsContext)
-  return editsContext
-}
+export const useEdits = (): EditsContextType => useContext(EditsContext)

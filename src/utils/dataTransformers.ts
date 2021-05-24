@@ -39,7 +39,7 @@ export const flattenObject = (ob): { [key: string]: any } => {
   return toReturn
 }
 
-type NormalizedObject = {
+export type NormalizedObject = {
   // namespace level, eg: 'Onboarding'
   [namespace: string]: {
     // key level, eg: 'goodMorning'

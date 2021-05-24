@@ -11,13 +11,26 @@ import { useDebounce } from './debounce'
 
 type UseLocalStorage = [storedValue: any, setValue: (value: any) => void]
 
+type UseLocalStorageOptions = {
+  debounceDuration?: number
+  onSaveSuccess?: (k: string, v: string) => void
+}
+
 export const useLocalStorage = (
   key: string,
-  initialValue: Record<string, unknown>
+  initialValue: Record<string, unknown>,
+  options?: UseLocalStorageOptions
 ): UseLocalStorage => {
-  const debounceSaveToLocalStorage = useDebounce((k, v) => {
+  const { debounceDuration = 0, onSaveSuccess } = options || {}
+
+  const setItem = (k, v) => {
     window.localStorage.setItem(k, v)
-  }, 500)
+    if (onSaveSuccess) {
+      onSaveSuccess(k, v)
+    }
+  }
+
+  const debounceSetItem = useDebounce(setItem, debounceDuration)
 
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
@@ -45,7 +58,15 @@ export const useLocalStorage = (
       // Save state
       setStoredValue(() => valueToStore)
 
-      debounceSaveToLocalStorage(key, JSON.stringify(valueToStore))
+      debounceSetItem(key, JSON.stringify(valueToStore))
+
+      // if (debounceDuration) {
+      //   // Only use the debounced version of setItem if debounceDuration is greater than 0,
+      //   // otherwise leads to some weird behavior...
+      //   debounceSetItem(key, JSON.stringify(valueToStore))
+      // } else {
+      //   setItem(key, JSON.stringify(valueToStore))
+      // }
     } catch (error) {
       // A more advanced implementation would handle the error case
       console.log(error)

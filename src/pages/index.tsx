@@ -3,13 +3,11 @@ import React, { useRef } from 'react'
 import { EditsSummaryFooter } from '../components/EditsSummaryFooter'
 import { StickyNamespaceHeader } from '../components/StickyNamespaceHeader'
 import { TranslationBox } from '../components/TranslationBox'
+import { useEdits } from '../context/Edits'
 // import translations from '../data.json'
-import translations from '../data-long.json'
-import { flattenObject, normalizeDataShape } from '../utils/dataTransformers'
 
 export default function Index() {
-  const flatTranslations = flattenObject(translations)
-  const formatted = normalizeDataShape(flatTranslations)
+  const { formattedTranslations } = useEdits()
 
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({}).current
 
@@ -22,10 +20,14 @@ export default function Index() {
     }
   }
 
+  if (!formattedTranslations) {
+    return <h1>Loading...</h1>
+  }
+
   return (
-    <div className="flex flex-row">
+    <div className="flex">
       <div className="h-screen w-56 bg-gray-800 py-8 px-4 overflow-scroll space-y-2">
-        {Object.keys(formatted).map((namespace) => (
+        {Object.keys(formattedTranslations).map((namespace) => (
           <button
             key={`nameSpaceSidebar-${namespace}`}
             onClick={() => scrollToNamespaceSection(namespace)}
@@ -38,8 +40,8 @@ export default function Index() {
 
       <div className="flex flex-1 flex-col h-screen overflow-scroll">
         <>
-          {Object.keys(formatted).map((namespace, indexInNamespaces) => {
-            const keysOfNamespace = Object.values(formatted)[indexInNamespaces]
+          {Object.keys(formattedTranslations).map((namespace, indexInNamespaces) => {
+            const keysOfNamespace = Object.values(formattedTranslations)[indexInNamespaces]
 
             const sectionId = `namespaceSection-${namespace}`
 
@@ -60,7 +62,7 @@ export default function Index() {
                         key={keyId}
                         keyId={keyId}
                         keyLabel={key}
-                        translations={formatted[namespace][key]}
+                        translations={formattedTranslations[namespace][key]}
                       />
                     )
                   })}
