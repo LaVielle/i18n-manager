@@ -45,6 +45,48 @@ export const flattenObject = (ob): { [key: string]: any } => {
   return toReturn
 }
 
+/**
+ * Taken from https://stackoverflow.com/a/19204980/9957187
+ * */
+export const unflattenObject = (table) => {
+  const result = {}
+
+  for (const path in table) {
+    var cursor = result,
+      length = path.length,
+      property = '',
+      index = 0
+
+    while (index < length) {
+      const char = path.charAt(index)
+
+      if (char === '[') {
+        var start = index + 1,
+          end = path.indexOf(']', start),
+          cursor = (cursor[property] = cursor[property] || []),
+          property = path.slice(start, end),
+          index = end + 1
+      } else {
+        var cursor = (cursor[property] = cursor[property] || {}),
+          start = char === '.' ? index + 1 : index,
+          bracket = path.indexOf('[', start),
+          dot = path.indexOf('.', start)
+
+        if (bracket < 0 && dot < 0) var end = (index = length)
+        else if (bracket < 0) var end = (index = dot)
+        else if (dot < 0) var end = (index = bracket)
+        else var end = (index = bracket < dot ? bracket : dot)
+
+        var property = path.slice(start, end)
+      }
+    }
+
+    cursor[property] = table[path]
+  }
+
+  return result['']
+}
+
 export type NormalizedObject = {
   // namespace level, eg: 'Onboarding'
   [namespace: string]: {
@@ -109,3 +151,5 @@ export const normalizeDataShape = (flatObject: { [key: string]: string }): Norma
     return acc
   }, {})
 }
+
+const constructHierachicalObjectFromFlat = () => {}

@@ -4,7 +4,7 @@ import { useEdits } from '../context/Edits'
 import { ActionButton } from './ActionButton'
 
 export const EditsSummaryFooter: React.FC = () => {
-  const { numberOfEdits } = useEdits()
+  const { numberOfEdits, downloadTargetJson } = useEdits()
 
   if (!numberOfEdits) {
     return null
@@ -25,7 +25,7 @@ export const EditsSummaryFooter: React.FC = () => {
 
       <ActionButton
         label={'Export JSON'}
-        onClick={() => console.log('hey')}
+        onClick={downloadTargetJson}
         className="bg-blue-500 hover:bg-blue-400"
       />
     </div>

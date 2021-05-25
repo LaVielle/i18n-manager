@@ -1,3 +1,4 @@
+import exportFromJSON from 'export-from-json'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 
@@ -6,6 +7,7 @@ import {
   getDataFromFlatKeyId,
   normalizeDataShape,
   NormalizedObject,
+  unflattenObject,
 } from '../utils/dataTransformers'
 import { useLocalStorage } from '../utils/useLocalStorage'
 
@@ -21,6 +23,7 @@ type EditsContextType = {
   namespacesWithRealDiff: { [key: string]: boolean }
   formattedTranslations: NormalizedObject | null
   addSourceFile: (translations: string) => void
+  downloadTargetJson: () => void
 }
 
 const EditsContext = React.createContext<EditsContextType>({} as EditsContextType)
@@ -101,6 +104,15 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     setNumberOfEdits(Object.keys(keysWithRealDiff).length)
   }, [keysWithRealDiff])
 
+  const downloadTargetJson = () => {
+    const unflattenedTranslations = unflattenObject(mergedFlatTranslations)
+    exportFromJSON({
+      data: unflattenedTranslations,
+      fileName: `translations-${Date.now()}.json`,
+      exportType: 'json',
+    })
+  }
+
   return (
     <EditsContext.Provider
       value={{
@@ -111,6 +123,7 @@ export const EditsContextProvider: React.FC = ({ children }) => {
         formattedTranslations,
         addSourceFile,
         namespacesWithRealDiff,
+        downloadTargetJson,
       }}
     >
       {children}
