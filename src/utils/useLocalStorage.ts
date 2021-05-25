@@ -5,7 +5,7 @@ import { useDebounce } from './debounce'
 /**
  * useLocalStorage
  *
- * A hook that syncs state to local storage so it can be persisted accross sessions.
+ * A hook that syncs state to local storage so it can be persisted across sessions.
  * Taken from and only slightly modified: https://usehooks.com/useLocalStorage/
  * */
 
@@ -24,9 +24,11 @@ export const useLocalStorage = (
   const { debounceDuration = 0, onSaveSuccess } = options || {}
 
   const setItem = (k, v) => {
-    window.localStorage.setItem(k, v)
-    if (onSaveSuccess) {
-      onSaveSuccess(k, v)
+    if (typeof window !== undefined) {
+      window.localStorage.setItem(k, v)
+      if (onSaveSuccess) {
+        onSaveSuccess(k, v)
+      }
     }
   }
 
@@ -36,6 +38,9 @@ export const useLocalStorage = (
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = useState(() => {
     try {
+      if (typeof window === undefined) {
+        throw new Error('window is undefined')
+      }
       // Get from local storage by key
       const item = window.localStorage.getItem(key)
 
