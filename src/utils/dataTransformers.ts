@@ -1,3 +1,9 @@
+export const getDataFromFlatKeyId = (flatKey: string) => {
+  const [language, namespace, key] = flatKey.split('.')
+
+  return { language, namespace, key }
+}
+
 /**
  * flattenObject
  *
@@ -73,7 +79,7 @@ export type NormalizedObject = {
  * */
 export const normalizeDataShape = (flatObject: { [key: string]: string }): NormalizedObject => {
   return Object.keys(flatObject).reduce<NormalizedObject>((acc, cur, index) => {
-    const [language, namespace, key] = cur.split('.')
+    const { language, namespace, key } = getDataFromFlatKeyId(cur)
 
     if (acc[namespace]) {
       if (acc[namespace][key]) {

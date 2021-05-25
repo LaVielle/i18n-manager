@@ -1,12 +1,13 @@
 import React, { useRef } from 'react'
 
+import { AnimatedSidebarItem } from '../components/AnimatedSidebarItem'
 import { EditsSummaryFooter } from '../components/EditsSummaryFooter'
 import { StickyNamespaceHeader } from '../components/StickyNamespaceHeader'
 import { TranslationBox } from '../components/TranslationBox'
 import { useEdits } from '../context/Edits'
 
 export default function Index() {
-  const { formattedTranslations } = useEdits()
+  const { formattedTranslations, namespacesWithRealDiff } = useEdits()
 
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({}).current
 
@@ -27,13 +28,12 @@ export default function Index() {
     <div className="flex">
       <div className="h-screen w-56 bg-gray-800 py-8 px-4 overflow-scroll space-y-2">
         {Object.keys(formattedTranslations).map((namespace) => (
-          <button
+          <AnimatedSidebarItem
             key={`nameSpaceSidebar-${namespace}`}
+            label={namespace}
+            shouldShowDot={!!namespacesWithRealDiff[namespace]}
             onClick={() => scrollToNamespaceSection(namespace)}
-            className="px-4 py-1 rounded-md block hover:bg-gray-600"
-          >
-            <h1 className="text-gray-100 text-xl">{namespace}</h1>
-          </button>
+          />
         ))}
       </div>
 

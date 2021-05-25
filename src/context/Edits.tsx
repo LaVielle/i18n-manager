@@ -1,7 +1,12 @@
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 
-import { flattenObject, normalizeDataShape, NormalizedObject } from '../utils/dataTransformers'
+import {
+  flattenObject,
+  getDataFromFlatKeyId,
+  normalizeDataShape,
+  NormalizedObject,
+} from '../utils/dataTransformers'
 import { useLocalStorage } from '../utils/useLocalStorage'
 
 type FlatObject = {
@@ -13,6 +18,7 @@ type EditsContextType = {
   allEdits: FlatObject
   setEdit: (key: string, value: string) => void
   mergedFlatTranslations: FlatObject
+  namespacesWithRealDiff: { [key: string]: boolean }
   formattedTranslations: NormalizedObject | null
   addSourceFile: (translations: string) => void
 }
@@ -43,6 +49,14 @@ export const EditsContextProvider: React.FC = ({ children }) => {
   const [allEdits, setAllEdits] = useLocalStorage('allEdits', {})
 
   const [keysWithRealDiff, setKeysWithRealDiff] = useState({})
+
+  const namespacesWithRealDiff = Object.keys(keysWithRealDiff).reduce((acc, flatKeyId) => {
+    const { namespace } = getDataFromFlatKeyId(flatKeyId)
+    return {
+      ...acc,
+      [namespace]: true,
+    }
+  }, {})
 
   const addSourceFile = (translations: string) => {
     const flatSource = flattenObject(translations)
@@ -96,6 +110,7 @@ export const EditsContextProvider: React.FC = ({ children }) => {
         mergedFlatTranslations,
         formattedTranslations,
         addSourceFile,
+        namespacesWithRealDiff,
       }}
     >
       {children}
