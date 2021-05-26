@@ -19,7 +19,6 @@ type EditsContextType = {
   numberOfEdits: number
   allEdits: FlatObject
   setEdit: (key: string, value: string) => void
-  mergedFlatTranslations: FlatObject
   namespacesWithRealDiff: { [key: string]: boolean }
   formattedTranslations: NormalizedObject | null
   addSourceFile: (translations: string) => void
@@ -46,7 +45,6 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     }
   }, [sourceFlatTranslations])
 
-  const [mergedFlatTranslations, setMergedFlatTranslations] = useState<FlatObject>({})
   const [formattedTranslations, setFormattedTranslations] = useState<NormalizedObject | null>(null)
 
   const [allEdits, setAllEdits] = useLocalStorage('allEdits', {})
@@ -76,9 +74,7 @@ export const EditsContextProvider: React.FC = ({ children }) => {
         ...allEdits,
       }
 
-      const formatted = normalizeDataShape(merged)
-      setMergedFlatTranslations(merged)
-      setFormattedTranslations(formatted)
+      setFormattedTranslations(normalizeDataShape(merged))
     }
   }, [sourceFlatTranslations])
 
@@ -104,11 +100,16 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     setNumberOfEdits(Object.keys(keysWithRealDiff).length)
   }, [keysWithRealDiff])
 
+  const getMergedFlatTranslations = () => ({
+    ...sourceFlatTranslations,
+    ...allEdits,
+  })
+
   const downloadTargetJson = () => {
-    const unflattenedTranslations = unflattenObject(mergedFlatTranslations)
+    const unflattenedTranslations = unflattenObject(getMergedFlatTranslations())
     exportFromJSON({
       data: unflattenedTranslations,
-      fileName: `translations-${Date.now()}.json`,
+      fileName: `translations-${Date.now()}`,
       exportType: 'json',
     })
   }
@@ -119,7 +120,6 @@ export const EditsContextProvider: React.FC = ({ children }) => {
         numberOfEdits,
         allEdits,
         setEdit,
-        mergedFlatTranslations,
         formattedTranslations,
         addSourceFile,
         namespacesWithRealDiff,
