@@ -1,3 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
+
 export const getDataFromFlatKeyId = (flatKey: string) => {
   const [language, namespace, key] = flatKey.split('.')
 

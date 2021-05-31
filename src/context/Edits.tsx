@@ -96,7 +96,7 @@ export const EditsContextProvider: React.FC = ({ children }) => {
   }, [sourceFlatTranslations])
 
   const setEdit = (key: string, value: string) => {
-    setAllEdits((prevAllEdits) => ({
+    setAllEdits((prevAllEdits: any) => ({
       ...prevAllEdits,
       [key]: value,
     }))
@@ -106,6 +106,8 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     const newKeysWithRealDiff = {}
     Object.keys(allEdits).forEach((key) => {
       if (allEdits[key] !== sourceFlatTranslations[key]) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         newKeysWithRealDiff[key] = allEdits[key]
       }
     })

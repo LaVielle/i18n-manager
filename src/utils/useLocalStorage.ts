@@ -23,7 +23,7 @@ export const useLocalStorage = (
 ): UseLocalStorage => {
   const { debounceDuration = 0, onSaveSuccess } = options || {}
 
-  const setItem = (k, v) => {
+  const setItem = (k: string, v: string) => {
     if (typeof window !== undefined) {
       window.localStorage.setItem(k, v)
       if (onSaveSuccess) {
