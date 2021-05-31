@@ -1,10 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { useEdits } from '../context/Edits'
 import { ActionButton } from './ActionButton'
 
 export const EditsSummaryFooter: React.FC = () => {
   const { numberOfEdits, downloadTargetJson } = useEdits()
+  const [exportLoading, setExportLoading] = useState(false)
+
+  const onPressExport = () => {
+    setExportLoading(true)
+    setTimeout(async () => {
+      await downloadTargetJson()
+      setExportLoading(false)
+    }, 250)
+  }
 
   if (!numberOfEdits) {
     return null
@@ -17,16 +26,17 @@ export const EditsSummaryFooter: React.FC = () => {
         {numberOfEdits === 1 ? 'edit' : 'edits'} saved locally
       </h1>
 
-      <ActionButton
-        label={'View summary'}
-        onClick={() => console.log('hey')}
-        className="bg-green-500 hover:bg-green-400 mr-4"
-      />
+      {/*<ActionButton*/}
+      {/*  label={'View summary'}*/}
+      {/*  onClick={() => console.log('hey')}*/}
+      {/*  className="bg-green-500 hover:bg-green-400 mr-4"*/}
+      {/*/>*/}
 
       <ActionButton
         label={'Export JSON'}
-        onClick={downloadTargetJson}
+        onClick={onPressExport}
         className="bg-blue-500 hover:bg-blue-400"
+        loading={exportLoading}
       />
     </div>
   )

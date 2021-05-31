@@ -33,6 +33,16 @@ export default function StartPage() {
     },
   })
 
+  const onPressStartEditing = () => {
+    if (tempJsonFile) {
+      setLoading(true)
+      setTimeout(() => {
+        addSourceFile(JSON.parse(tempJsonFile.data))
+        router.push('/').then()
+      }, 250)
+    }
+  }
+
   return (
     <div className="h-screen flex flex-col items-center justify-center">
       <h1 className="text-2xl mb-8">Import your translation file to start</h1>
@@ -61,15 +71,7 @@ export default function StartPage() {
       {error && <p className="text-red-500 text-lg">{error}</p>}
 
       {tempJsonFile && (
-        <ActionButton
-          label={'Start editing'}
-          onClick={() => {
-            setLoading(true)
-            addSourceFile(JSON.parse(tempJsonFile.data))
-            router.push('/').then()
-          }}
-          loading={loading}
-        />
+        <ActionButton label={'Start editing'} onClick={onPressStartEditing} loading={loading} />
       )}
     </div>
   )

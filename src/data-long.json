@@ -301,7 +301,8 @@
       "waitForLoadingToken": "Please wait",
       "paymentText": "You can use VYTAL for free if you return the bowl within 14 days. After that you will be charged 10€. You can also use this payment method to preorder food through our app.",
       "successPayPal": "Your PayPal account was successfully linked",
-      "okayButton": "Okay"
+      "okayButton": "Okay",
+      "errorSettingUpPaypal": "There was an error setting up Paypal, please try again."
     },
     "TellAFriend": {
       "inviteFriends": "Invite friends",
@@ -823,7 +824,7 @@
       "hereIsHow": "Here's how.",
       "deliveryToken": "Delivery token",
       "deliverTokenLongExplanation": "Your delivery token lets you use VYTAL bowls when you order from delivery services like Lieferando.\n\nSimply copy/paste it into the comment field of your Lieferando order, and the restaurant will pack your food in VYTAL bowls, just as if they had scanned your QR code.\n\nYour token is valid for 6 days.",
-      "formattedDeliveryTokenMessage": "VYTAL Liefercode fürs Scannen: {{token}}\nBitte verpacke mein Essen in den nachhaltigen VYTAL-Mehrwegschalen!"
+      "formattedDeliveryTokenMessage": "VYTAL Liefercode fürs Scannen: {{token}} Bitte verpacke mein Essen in den nachhaltigen VYTAL-Mehrwegschalen!"
     },
     "ContainerTransfer": {
       "headerDeliveryToken": "Your Delivery Token",
@@ -834,7 +835,7 @@
       "qrCodeExplanation": "<0>Show this QR code to partner restaurants</0> to borrow VYTAL containers.",
       "selfCheckoutExplanation": "<0>Checkout containers yourself</0> by scanning their QR Codes. Show the following confirmation to restaurant staff.",
       "selfReturnExplanation": "<0>Return containers by yourself</0>. First, select which containers you want to return.",
-      "formattedDeliveryTokenMessage": "VYTAL Liefercode fürs Scannen: {{token}}\nBitte verpacke mein Essen in den nachhaltigen VYTAL-Mehrwegschalen!",
+      "formattedDeliveryTokenMessage": "VYTAL Liefercode fürs Scannen: {{token}} Bitte verpacke mein Essen in den nachhaltigen VYTAL-Mehrwegschalen!",
       "allowCameraAccess": "Allow camera access",
       "borrowX": "Borrow {{count}}",
       "qrCode": "QR Code",
@@ -1327,7 +1328,8 @@
       "waitForLoadingToken": "Bitte warten",
       "paymentText": "Mit VYTAL kannst du dir kostenlos Verpackungen ausleihen, solange du sie innerhalb von 14 Tagen zurückbringst. Danach werden dir 10€ berechnet. Mit deinem Zahlungsmittel kannst auch bequem über die App Essen vorbestellen.",
       "successPayPal": "Dein PayPal Konto wurde erfolgreich verknüpft",
-      "okayButton": "Okay"
+      "okayButton": "Okay",
+      "errorSettingUpPaypal": "There was an error setting up Paypal, please try again."
     },
     "TellAFriend": {
       "inviteFriends": "Freunde einladen",
@@ -1849,7 +1851,7 @@
       "hereIsHow": "So funktioniert's.",
       "deliveryToken": "Liefercode",
       "deliverTokenLongExplanation": "Mit deinem VYTAL Liefercode kannst du dir dein Essen von VYTAL Partnern ganz bequem liefern lassen, egal ob du über ihre eigene Website oder Lieferportale wie Lieferando bestellst.\n\nEinfach den Code kopieren und in das Kommentarfeld am Ende der Bestellung einfügen. Das Restaurant kann dann die Schalen mit deinem Konto verknüpfen.\n\nDein Code ist 6 Tage lang gültig.",
-      "formattedDeliveryTokenMessage": "VYTAL Liefercode fürs Scannen: {{token}}\nBitte verpacke mein Essen in den nachhaltigen VYTAL-Mehrwegschalen!"
+      "formattedDeliveryTokenMessage": "VYTAL Liefercode fürs Scannen: {{token}} Bitte verpacke mein Essen in den nachhaltigen VYTAL-Mehrwegschalen!"
     },
     "ContainerTransfer": {
       "headerDeliveryToken": "Dein Liefertoken",
@@ -1860,7 +1862,7 @@
       "qrCodeExplanation": "<0>Zeige diesen QR-Code dem Partnerpersonal</0>, damit sie Behälter auf dein Konto buchen können.",
       "selfCheckoutExplanation": "<0>Buche Behälter selber auf dein Konto</0>, indem du die QR-Codes scannst. Zeige die anschließende Bestätigung an der Kasse vor.",
       "selfReturnExplanation": "<0>Buche deine Behälter selber zurück</0>. Wähle zuerst die Behälter hierfür aus.",
-      "formattedDeliveryTokenMessage": "VYTAL Liefercode fürs Scannen: {{token}}\nBitte verpacke mein Essen in den nachhaltigen VYTAL-Mehrwegschalen!",
+      "formattedDeliveryTokenMessage": "VYTAL Liefercode fürs Scannen: {{token}} Bitte verpacke mein Essen in den nachhaltigen VYTAL-Mehrwegschalen!",
       "allowCameraAccess": "Zugriff auf Kamera erlauben",
       "borrowX": "{{count}} Ausleihen",
       "qrCode": "QR-Code",
@@ -2353,7 +2355,8 @@
       "waitForLoadingToken": "Even geduld aub",
       "paymentText": "Bij VYTAL kun je gratis verpakkingen lenen, mits je deze binnen 14 dagen retourneert. Daarna wordt € 10, - in rekening gebracht. Ook kun je met je betaalmethode gemakkelijk eten voorbestellen via de app.",
       "successPayPal": "Jouw PayPal-account is succesvol gekoppeld",
-      "okayButton": "Oke"
+      "okayButton": "Oke",
+      "errorSettingUpPaypal": "There was an error setting up Paypal, please try again."
     },
     "TellAFriend": {
       "inviteFriends": "Nodig vrienden uit",
@@ -2875,7 +2878,7 @@
       "hereIsHow": "Hier is hoe.",
       "deliveryToken": "Delivery token",
       "deliverTokenLongExplanation": "Met je bezorgtoken kun je VYTAL-bowls gebruiken wanneer je bestelt bij bezorgdiensten zoals Lieferando.\n\n Kopieer en plak het gewoon in het opmerkingenveld van je Lieferando-bestelling, en het restaurant zal je eten in VYTAL-bowls verpakken, net alsof ze jouw QR-code hebben gescand. \n\n Uw token is 6 dagen geldig",
-      "formattedDeliveryTokenMessage": "VYTAL Liefercode fürs Scannen: {{token}}\nBitte verpacke mein Essen in den nachhaltigen VYTAL-Mehrwegschalen!"
+      "formattedDeliveryTokenMessage": "VYTAL Liefercode fürs Scannen: {{token}} Bitte verpacke mein Essen in den nachhaltigen VYTAL-Mehrwegschalen!"
     },
     "ContainerTransfer": {
       "headerDeliveryToken": "Your Delivery Token",
@@ -2886,7 +2889,7 @@
       "qrCodeExplanation": "<0>Show this QR code to partner restaurants</0> to borrow VYTAL containers.",
       "selfCheckoutExplanation": "<0>Checkout containers yourself</0> by scanning their QR Codes. Show the following confirmation to restaurant staff.",
       "selfReturnExplanation": "<0>Return containers by yourself</0>. First, select which containers you want to return.",
-      "formattedDeliveryTokenMessage": "VYTAL Liefercode fürs Scannen: {{token}}\nBitte verpacke mein Essen in den nachhaltigen VYTAL-Mehrwegschalen!",
+      "formattedDeliveryTokenMessage": "VYTAL Liefercode fürs Scannen: {{token}} Bitte verpacke mein Essen in den nachhaltigen VYTAL-Mehrwegschalen!",
       "allowCameraAccess": "Allow camera access",
       "borrowX": "Borrow {{count}}",
       "qrCode": "QR Code",

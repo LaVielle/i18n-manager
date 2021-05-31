@@ -40,13 +40,6 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     {}
   )
 
-  useEffect(() => {
-    // Navigate to the start page if there is no source file yet
-    if (!Object.keys(sourceFlatTranslations).length && router.pathname !== '/start') {
-      router.push('start').then()
-    }
-  }, [sourceFlatTranslations])
-
   const [formattedTranslations, setFormattedTranslations] = useState<NormalizedObject | null>(null)
 
   const [allEdits, setAllEdits] = useLocalStorage('allEdits', {})
@@ -63,6 +56,28 @@ export const EditsContextProvider: React.FC = ({ children }) => {
 
   const addSourceFile = (translations: string) => {
     const flatSource = flattenObject(translations)
+
+    // This commented out logic can be used to add a new language, in this case: French (fr).
+    // It loops through all the keys and creates a key for the new language, with an empty string as the value.
+    // If the key already exists, it is ignored.
+    // const srcWithFrench = Object.keys(flatSource).reduce(
+    //   (acc, k) => {
+    //     const { namespace, key } = getDataFromFlatKeyId(k)
+    //
+    //     const newKey = `fr.${namespace}.${key}`
+    //
+    //     if (!acc[newKey]) {
+    //       return {
+    //         ...acc,
+    //         [newKey]: '',
+    //       }
+    //     }
+    //
+    //     return acc
+    //   },
+    //   { ...flatSource }
+    // )
+
     setSourceFlatTranslations(flatSource)
   }
 
@@ -107,14 +122,16 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     ...allEdits,
   })
 
-  const downloadTargetJson = () => {
-    const unflattenedTranslations = unflattenObject(getMergedFlatTranslations())
-    exportFromJSON({
-      data: unflattenedTranslations,
-      fileName: `translations-${Date.now()}`,
-      exportType: 'json',
+  const downloadTargetJson = () =>
+    new Promise<void>((resolve) => {
+      const unflattenedTranslations = unflattenObject(getMergedFlatTranslations())
+      exportFromJSON({
+        data: unflattenedTranslations,
+        fileName: `translations-${Date.now()}`,
+        exportType: 'json',
+      })
+      resolve()
     })
-  }
 
   return (
     <EditsContext.Provider
