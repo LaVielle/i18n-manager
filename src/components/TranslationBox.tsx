@@ -16,10 +16,7 @@ export const TranslationBox: React.FC<Props> = ({ keyId, keyLabel, translations 
       const translation = Object.values(translations)[indexInLanguages]
 
       return (
-        <div
-          key={`namespaceKeyLanguageSection-${keyId}.${language}`}
-          className="flex items-center mt-4"
-        >
+        <div key={`namespaceKeyLanguageSection-${keyId}.${language}`} className="flex mt-4">
           <TranslationInput
             translationId={`${language}.${keyId}`}
             language={language}

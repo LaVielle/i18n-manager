@@ -1,5 +1,3 @@
-// test
-
 export const Config = {
   site_name: 'Starter',
   title: 'Nextjs Starter',

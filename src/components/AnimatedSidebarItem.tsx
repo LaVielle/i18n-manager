@@ -12,7 +12,7 @@ export const AnimatedSidebarItem: React.FC<Props> = ({ label, onClick, shouldSho
     onClick={onClick}
     className="relative px-4 py-1 rounded-md hover:bg-gray-600 flex items-center"
   >
-    <div className="absolute">
+    <div className="absolute -inset-x-1">
       <Transition show={shouldShowDot}>
         <Transition.Child
           enter="transition-opacity ease-linear duration-300"
@@ -29,12 +29,6 @@ export const AnimatedSidebarItem: React.FC<Props> = ({ label, onClick, shouldSho
       </Transition>
     </div>
 
-    <h1
-      className={`text-gray-100 text-xl translate-x-0 transition ease-in-out duration-400 transform ${
-        shouldShowDot && 'translate-x-5'
-      }`}
-    >
-      {label}
-    </h1>
+    <h1 className="text-gray-100 text-xl">{label}</h1>
   </button>
 )

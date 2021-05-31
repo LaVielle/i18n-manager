@@ -19,6 +19,8 @@ type EditsContextType = {
   numberOfEdits: number
   allEdits: FlatObject
   setEdit: (key: string, value: string) => void
+  sourceFlatTranslations: { [key: string]: string }
+  keysWithRealDiff: { [key: string]: boolean }
   namespacesWithRealDiff: { [key: string]: boolean }
   formattedTranslations: NormalizedObject | null
   addSourceFile: (translations: string) => void
@@ -120,8 +122,10 @@ export const EditsContextProvider: React.FC = ({ children }) => {
         numberOfEdits,
         allEdits,
         setEdit,
+        sourceFlatTranslations,
         formattedTranslations,
         addSourceFile,
+        keysWithRealDiff,
         namespacesWithRealDiff,
         downloadTargetJson,
       }}
