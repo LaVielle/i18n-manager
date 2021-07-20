@@ -7,7 +7,7 @@ import { TranslationBox } from '../components/TranslationBox'
 import { useEdits } from '../context/Edits'
 
 export default function Index() {
-  const { formattedTranslations, namespacesWithRealDiff } = useEdits()
+  const { formattedTranslations, namespacesWithRealDiff, emptyKeys } = useEdits()
 
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({}).current
 
@@ -27,14 +27,26 @@ export default function Index() {
   return (
     <div className="flex">
       <div className="h-screen w-56 bg-gray-800 py-8 px-4 overflow-scroll space-y-2">
-        {Object.keys(formattedTranslations).map((namespace) => (
-          <AnimatedSidebarItem
-            key={`nameSpaceSidebar-${namespace}`}
-            label={namespace}
-            shouldShowDot={!!namespacesWithRealDiff[namespace]}
-            onClick={() => scrollToNamespaceSection(namespace)}
-          />
-        ))}
+        {Object.keys(formattedTranslations).map((namespace) => {
+          const namespaceHasEmptyKeys = emptyKeys[namespace].hasEmptyKeys
+          const namespaceHasEdits = !!namespacesWithRealDiff[namespace]
+
+          let dotColorClass = undefined
+          if (namespaceHasEmptyKeys) {
+            dotColorClass = 'bg-red-500'
+          } else if (namespaceHasEdits) {
+            dotColorClass = 'bg-green-400'
+          }
+
+          return (
+            <AnimatedSidebarItem
+              key={`nameSpaceSidebar-${namespace}`}
+              label={namespace}
+              dotColorClass={dotColorClass}
+              onClick={() => scrollToNamespaceSection(namespace)}
+            />
+          )
+        })}
       </div>
 
       <div className="flex flex-1 flex-col h-screen overflow-scroll">

@@ -22,6 +22,15 @@ type EditsContextType = {
   sourceFlatTranslations: { [key: string]: string }
   keysWithRealDiff: { [key: string]: boolean }
   namespacesWithRealDiff: { [key: string]: boolean }
+  emptyKeys: {
+    // namespace
+    [key: string]: {
+      // keyId
+      [key: string]: boolean
+      // helper key indicating whether the namespace has any empty key
+      hasEmptyKeys: boolean
+    }
+  }
   formattedTranslations: NormalizedObject | null
   addSourceFile: (translations: string) => void
   downloadTargetJson: () => void
@@ -54,31 +63,63 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     }
   }, {})
 
+  const emptyKeys = Object.keys(sourceFlatTranslations).reduce((acc, flatKeyId) => {
+    const { namespace } = getDataFromFlatKeyId(flatKeyId)
+
+    const keyHasBeenEdited = !!keysWithRealDiff[flatKeyId]
+
+    let isKeyEmpty: boolean
+
+    if (keyHasBeenEdited) {
+      isKeyEmpty = keysWithRealDiff[flatKeyId].trim() === ''
+    } else {
+      isKeyEmpty = sourceFlatTranslations[flatKeyId].trim() === ''
+    }
+
+    const prevNamespaceValue = acc[namespace] || {}
+    return {
+      ...acc,
+      [namespace]: {
+        ...prevNamespaceValue,
+        [flatKeyId]: isKeyEmpty,
+        hasEmptyKeys: isKeyEmpty ? true : prevNamespaceValue.hasEmptyKeys,
+      },
+    }
+  }, {})
+
   const addSourceFile = (translations: string) => {
     const flatSource = flattenObject(translations)
 
-    // This commented out logic can be used to add a new language, in this case: French (fr).
-    // It loops through all the keys and creates a key for the new language, with an empty string as the value.
+    // This loops through all the source keys. If a key is missing for a given language, it creates a key (empty string) for that language.
     // If the key already exists, it is ignored.
-    // const srcWithFrench = Object.keys(flatSource).reduce(
-    //   (acc, k) => {
-    //     const { namespace, key } = getDataFromFlatKeyId(k)
-    //
-    //     const newKey = `fr.${namespace}.${key}`
-    //
-    //     if (!acc[newKey]) {
-    //       return {
-    //         ...acc,
-    //         [newKey]: '',
-    //       }
-    //     }
-    //
-    //     return acc
-    //   },
-    //   { ...flatSource }
-    // )
+    // This assumes the main language is `en`, and that we wanna create keys for `de`, `fr`, and `nl`.
+    const srcWithAddedMissingKeys = Object.keys(flatSource).reduce(
+      (acc, k) => {
+        const { namespace, key } = getDataFromFlatKeyId(k)
 
-    setSourceFlatTranslations(flatSource)
+        const allKeys = { ...acc }
+
+        const newKeyDe = `de.${namespace}.${key}`
+        const newKeyNl = `nl.${namespace}.${key}`
+        const newKeyFr = `fr.${namespace}.${key}`
+
+        if (!allKeys[newKeyDe]) {
+          allKeys[newKeyDe] = ''
+        }
+        if (!allKeys[newKeyNl]) {
+          allKeys[newKeyNl] = ''
+        }
+        if (!allKeys[newKeyFr]) {
+          allKeys[newKeyFr] = ''
+        }
+
+        return allKeys
+      },
+      { ...flatSource }
+    )
+    setSourceFlatTranslations(srcWithAddedMissingKeys)
+
+    // setSourceFlatTranslations(flatSource)
   }
 
   useEffect(() => {
@@ -146,6 +187,7 @@ export const EditsContextProvider: React.FC = ({ children }) => {
         addSourceFile,
         keysWithRealDiff,
         namespacesWithRealDiff,
+        emptyKeys,
         downloadTargetJson,
       }}
     >

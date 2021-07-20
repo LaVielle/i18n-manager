@@ -3,17 +3,17 @@ import React from 'react'
 
 type Props = {
   label: string
-  shouldShowDot: boolean
+  dotColorClass: string | undefined
   onClick: () => void
 }
 
-export const AnimatedSidebarItem: React.FC<Props> = ({ label, onClick, shouldShowDot }) => (
+export const AnimatedSidebarItem: React.FC<Props> = ({ label, onClick, dotColorClass }) => (
   <button
     onClick={onClick}
     className="relative px-4 py-1 rounded-md hover:bg-gray-600 flex items-center"
   >
     <div className="absolute -inset-x-1">
-      <Transition show={shouldShowDot}>
+      <Transition show={!!dotColorClass}>
         <Transition.Child
           enter="transition-opacity ease-linear duration-300"
           enterFrom="opacity-0"
@@ -23,7 +23,7 @@ export const AnimatedSidebarItem: React.FC<Props> = ({ label, onClick, shouldSho
           leaveTo="opacity-0"
         >
           <div
-            className={`w-2 h-2 bg-green-400 rounded-full opacity-0 transition duration-500 ease-in opacity-100`}
+            className={`${dotColorClass} w-2 h-2 rounded-full opacity-0 transition duration-500 ease-in opacity-100`}
           />
         </Transition.Child>
       </Transition>
