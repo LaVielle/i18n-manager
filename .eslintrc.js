@@ -30,6 +30,7 @@ module.exports = {
   rules: {
     'prettier/prettier': ['error', {}, { usePrettierrc: true }], // Use our .prettierrc file as source
     'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
     'simple-import-sort/imports': 'error',
     'jsx-a11y/anchor-is-valid': [
       'error',

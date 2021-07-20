@@ -66,16 +66,19 @@ export const EditsContextProvider: React.FC = ({ children }) => {
   const emptyKeys = Object.keys(sourceFlatTranslations).reduce((acc, flatKeyId) => {
     const { namespace } = getDataFromFlatKeyId(flatKeyId)
 
+    // @ts-ignore
     const keyHasBeenEdited = !!keysWithRealDiff[flatKeyId]
 
     let isKeyEmpty: boolean
 
     if (keyHasBeenEdited) {
+      // @ts-ignore
       isKeyEmpty = keysWithRealDiff[flatKeyId].trim() === ''
     } else {
       isKeyEmpty = sourceFlatTranslations[flatKeyId].trim() === ''
     }
 
+    // @ts-ignore
     const prevNamespaceValue = acc[namespace] || {}
     return {
       ...acc,
