@@ -5,8 +5,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import {
   flattenObject,
   getDataFromFlatKeyId,
-  normalizeDataShape,
   NormalizedObject,
+  SourceDataObject,
   unflattenObject,
 } from '../utils/dataTransformers'
 import { useLocalStorage } from '../utils/useLocalStorage'
@@ -32,7 +32,7 @@ type EditsContextType = {
     }
   }
   formattedTranslations: NormalizedObject | null
-  addSourceFile: (translations: string) => void
+  addSourceFile: (translations: SourceDataObject) => void
   downloadTargetJson: () => void
 }
 
@@ -44,12 +44,12 @@ export const EditsContextProvider: React.FC = ({ children }) => {
   const [numberOfEdits, setNumberOfEdits] = useState(0)
 
   // state to hold the original translation file, as it was before edits
-  const [sourceFlatTranslations, setSourceFlatTranslations] = useLocalStorage(
-    'sourceFlatTranslations',
-    {}
-  )
+  const [sourceFlatTranslations, setSourceFlatTranslations] = useLocalStorage<
+    Record<string, unknown>
+  >('sourceFlatTranslations', {})
 
-  const [formattedTranslations, setFormattedTranslations] = useState<NormalizedObject | null>(null)
+  const [formattedTranslations, setFormattedTranslations] =
+    useLocalStorage<NormalizedObject | null>('formattedTranslations', null)
 
   const [allEdits, setAllEdits] = useLocalStorage('allEdits', {})
 
@@ -90,37 +90,69 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     }
   }, {})
 
-  const addSourceFile = (translations: string) => {
-    const flatSource = flattenObject(translations)
+  const addSourceFile = (translations: SourceDataObject) => {
+    if (Object.keys(translations).length === 0) {
+      return setSourceFlatTranslations({})
+    }
 
-    // This loops through all the source keys. If a key is missing for a given language, it creates a key (empty string) for that language.
-    // If the key already exists, it is ignored.
-    // This assumes the main language is `en`, and that we wanna create keys for `de`, `fr`, and `nl`.
-    const srcWithAddedMissingKeys = Object.keys(flatSource).reduce(
-      (acc, k) => {
-        const { namespace, key } = getDataFromFlatKeyId(k)
+    const mainLanguageFlat = flattenObject({ en: translations.en })
 
-        const allKeys = { ...acc }
+    const translationsCopy = { ...translations }
 
-        const newKeyDe = `de.${namespace}.${key}`
-        const newKeyNl = `nl.${namespace}.${key}`
-        const newKeyFr = `fr.${namespace}.${key}`
+    delete translationsCopy.en
 
-        if (!allKeys[newKeyDe]) {
-          allKeys[newKeyDe] = ''
+    const otherLanguagesFlat = flattenObject(translationsCopy)
+
+    const normalizedObject: NormalizedObject = {}
+
+    for (let i = 0; i < Object.keys(mainLanguageFlat).length; i += 1) {
+      const currentKey = Object.keys(mainLanguageFlat)[i]
+      const { namespace, key } = getDataFromFlatKeyId(currentKey)
+
+      const keyEn = `en.${namespace}.${key}`
+
+      const newKeyDe = `de.${namespace}.${key}`
+      const newKeyNl = `nl.${namespace}.${key}`
+      const newKeyFr = `fr.${namespace}.${key}`
+
+      if (!otherLanguagesFlat[newKeyDe]) {
+        otherLanguagesFlat[newKeyDe] = ''
+      }
+
+      if (!otherLanguagesFlat[newKeyNl]) {
+        otherLanguagesFlat[newKeyNl] = ''
+      }
+
+      if (!otherLanguagesFlat[newKeyFr]) {
+        otherLanguagesFlat[newKeyFr] = ''
+      }
+
+      if (normalizedObject[namespace]) {
+        normalizedObject[namespace][key] = {
+          en: mainLanguageFlat[keyEn],
+          de: otherLanguagesFlat[newKeyDe],
+          nl: otherLanguagesFlat[newKeyNl],
+          fr: otherLanguagesFlat[newKeyFr],
         }
-        if (!allKeys[newKeyNl]) {
-          allKeys[newKeyNl] = ''
+      } else {
+        normalizedObject[namespace] = {
+          [key]: {
+            en: mainLanguageFlat[keyEn],
+            de: otherLanguagesFlat[newKeyDe],
+            nl: otherLanguagesFlat[newKeyNl],
+            fr: otherLanguagesFlat[newKeyFr],
+          },
         }
-        if (!allKeys[newKeyFr]) {
-          allKeys[newKeyFr] = ''
-        }
+      }
+    }
 
-        return allKeys
-      },
-      { ...flatSource }
-    )
-    setSourceFlatTranslations(srcWithAddedMissingKeys)
+    const output = {
+      ...mainLanguageFlat,
+      ...otherLanguagesFlat,
+    }
+
+    setSourceFlatTranslations(output)
+    setFormattedTranslations(normalizedObject)
 
     // setSourceFlatTranslations(flatSource)
   }
@@ -129,13 +161,6 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     // Navigate to the start page if there is no source file yet
     if (!Object.keys(sourceFlatTranslations).length && router.pathname !== '/start') {
       router.push('start').then()
-    } else if (Object.keys(sourceFlatTranslations).length) {
-      const merged = {
-        ...sourceFlatTranslations,
-        ...allEdits,
-      }
-
-      setFormattedTranslations(normalizeDataShape(merged))
     }
   }, [sourceFlatTranslations])
 

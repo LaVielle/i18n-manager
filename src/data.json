@@ -4,7 +4,8 @@
       "meat": "Meat",
       "cheese": "Cheese",
       "bread": "Bread",
-      "apple": "Apple"
+      "apple": "Apple",
+      "lineBreak": "Hello\nBye"
     },
     "Work": {
       "computer": "Computer",

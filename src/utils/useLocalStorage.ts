@@ -9,18 +9,18 @@ import { useDebounce } from './debounce'
  * Taken from and only slightly modified: https://usehooks.com/useLocalStorage/
  * */
 
-type UseLocalStorage = [storedValue: any, setValue: (value: any) => void]
+type UseLocalStorage<K> = [storedValue: any, setValue: (value: K) => void]
 
 type UseLocalStorageOptions = {
   debounceDuration?: number
-  onSaveSuccess?: (k: string, v: string) => void
+  onSaveSuccess?: (key: string, value: string) => void
 }
 
-export const useLocalStorage = (
+export const useLocalStorage = <K>(
   key: string,
-  initialValue: Record<string, unknown>,
+  initialValue: K,
   options?: UseLocalStorageOptions
-): UseLocalStorage => {
+): UseLocalStorage<K> => {
   const { debounceDuration = 0, onSaveSuccess } = options || {}
 
   const setItem = (k: string, v: string) => {
@@ -36,7 +36,7 @@ export const useLocalStorage = (
 
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
-  const [storedValue, setStoredValue] = useState(() => {
+  const [storedValue, setStoredValue] = useState<K>(() => {
     try {
       if (typeof window === undefined) {
         throw new Error('window is undefined')
@@ -56,7 +56,7 @@ export const useLocalStorage = (
 
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
-  const setValue = (value: any) => {
+  const setValue = (value: K) => {
     try {
       // Allow value to be a function so we have same API as useState
       const valueToStore = value instanceof Function ? value(storedValue) : value

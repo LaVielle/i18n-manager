@@ -90,6 +90,17 @@ export const unflattenObject = (table) => {
   return result['']
 }
 
+export type SourceDataObject = {
+  // language level, 'en'
+  [language: string]: {
+    // namespace level, eg: 'Onboarding'
+    [namespace: string]: {
+      // key level, eg: "goodMorning": "Good morning"
+      [key: string]: string
+    }
+  }
+}
+
 export type NormalizedObject = {
   // namespace level, eg: 'Onboarding'
   [namespace: string]: {
