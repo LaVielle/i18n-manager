@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { useEdits } from '../context/Edits'
+import { ResizableTextArea } from '../elements/ResizableTextArea'
 import { getDataFromFlatKeyId } from '../utils/dataTransformers'
 import { useDebounce } from '../utils/debounce'
 
@@ -26,8 +27,11 @@ export const TranslationInput: React.FC<Props> = ({ translationId, language, tra
   }
 
   const onChange = useDebounce(
-    (e) => {
-      setEdit(translationId, e.target.value)
+    // (e) => {
+    //   setEdit(translationId, e.target.value)
+    // },
+    (text) => {
+      setEdit(translationId, text)
     },
     350,
     [setEdit]
@@ -37,10 +41,15 @@ export const TranslationInput: React.FC<Props> = ({ translationId, language, tra
     <>
       <p className="w-12 pt-3.5 text-xl text-gray-700">{language}</p>
       <div className={'flex flex-col flex-1'}>
-        <input
-          className={`flex-1 border-2 p-4 rounded-md ${borderColorClass}`}
+        {/*<input*/}
+        {/*  className={`flex-1 border-2 p-4 rounded-md ${borderColorClass}`}*/}
+        {/*  defaultValue={translation}*/}
+        {/*  onChange={onChange}*/}
+        {/*/>*/}
+        <ResizableTextArea
           defaultValue={translation}
-          onChange={onChange}
+          onChangeText={onChange}
+          borderColorClass={borderColorClass}
         />
         {keyHasRealDiff && (
           <p className="text-red-300 pt-1">Changed from: {sourceFlatTranslations[translationId]}</p>
