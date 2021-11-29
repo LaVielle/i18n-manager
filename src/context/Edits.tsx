@@ -114,6 +114,7 @@ export const EditsContextProvider: React.FC = ({ children }) => {
       const newKeyDe = `de.${namespace}.${key}`
       const newKeyNl = `nl.${namespace}.${key}`
       const newKeyFr = `fr.${namespace}.${key}`
+      const newKeyNo = `no.${namespace}.${key}`
 
       if (!otherLanguagesFlat[newKeyDe]) {
         otherLanguagesFlat[newKeyDe] = ''
@@ -127,20 +128,26 @@ export const EditsContextProvider: React.FC = ({ children }) => {
         otherLanguagesFlat[newKeyFr] = ''
       }
 
+      if (!otherLanguagesFlat[newKeyNo]) {
+        otherLanguagesFlat[newKeyNo] = ''
+      }
+
       if (normalizedObject[namespace]) {
         normalizedObject[namespace][key] = {
-          en: mainLanguageFlat[keyEn],
           de: otherLanguagesFlat[newKeyDe],
-          nl: otherLanguagesFlat[newKeyNl],
+          en: mainLanguageFlat[keyEn],
           fr: otherLanguagesFlat[newKeyFr],
+          nl: otherLanguagesFlat[newKeyNl],
+          no: otherLanguagesFlat[newKeyNo],
         }
       } else {
         normalizedObject[namespace] = {
           [key]: {
-            en: mainLanguageFlat[keyEn],
             de: otherLanguagesFlat[newKeyDe],
-            nl: otherLanguagesFlat[newKeyNl],
+            en: mainLanguageFlat[keyEn],
             fr: otherLanguagesFlat[newKeyFr],
+            nl: otherLanguagesFlat[newKeyNl],
+            no: otherLanguagesFlat[newKeyNo],
           },
         }
       }
