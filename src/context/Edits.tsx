@@ -1,4 +1,5 @@
 import exportFromJSON from 'export-from-json'
+import { sortAsync } from 'json-keys-sort'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 
@@ -207,16 +208,16 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     ...allEdits,
   })
 
-  const downloadTargetJson = () =>
-    new Promise<void>((resolve) => {
-      const unflattenedTranslations = unflattenObject(getMergedFlatTranslations())
-      exportFromJSON({
-        data: unflattenedTranslations,
-        fileName: `translations-${Date.now()}`,
-        exportType: 'json',
-      })
-      resolve()
+  const downloadTargetJson = async () => {
+    const unflattenedTranslations = unflattenObject(getMergedFlatTranslations())
+    const sorted = await sortAsync(unflattenedTranslations, true)
+
+    exportFromJSON({
+      data: sorted,
+      fileName: `translations-${Date.now()}`,
+      exportType: 'json',
     })
+  }
 
   return (
     <EditsContext.Provider
