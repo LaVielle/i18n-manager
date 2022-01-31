@@ -1,5 +1,5 @@
 import exportFromJSON from 'export-from-json'
-import { sortAsync } from 'json-keys-sort'
+import { sort, sortAsync } from 'json-keys-sort'
 import { useRouter } from 'next/router'
 import React, { useContext, useEffect, useState } from 'react'
 
@@ -96,6 +96,15 @@ export const EditsContextProvider: React.FC = ({ children }) => {
       return setSourceFlatTranslations({})
     }
 
+    const allLanguageCodes = Object.keys(translations)
+    const mainLanguageCode = 'en'
+
+    // TODO: finalize this option that allows to control whether to create empty keys if missing for given languages.
+    const disabledLanguageCodes = ['nl']
+
+    const otherLanguageCodes = allLanguageCodes.filter((el) => el !== mainLanguageCode)
+    // console.log({ allLanguageCodes, mainLanguageCode, otherLanguageCodes })
+
     const mainLanguageFlat = flattenObject({ en: translations.en })
 
     const translationsCopy = { ...translations }
@@ -112,51 +121,34 @@ export const EditsContextProvider: React.FC = ({ children }) => {
 
       const keyEn = `en.${namespace}.${key}`
 
-      const newKeyDe = `de.${namespace}.${key}`
-      const newKeyNl = `nl.${namespace}.${key}`
-      const newKeyFr = `fr.${namespace}.${key}`
-      const newKeyNb = `nb.${namespace}.${key}`
-      const newKeyEt = `et.${namespace}.${key}`
+      for (let j = 0; j < otherLanguageCodes.length; j += 1) {
+        const newKeyForLanguageCode = `${otherLanguageCodes[j]}.${namespace}.${key}`
 
-      if (!otherLanguagesFlat[newKeyDe]) {
-        otherLanguagesFlat[newKeyDe] = ''
+        // create key with and empty string if the key is missing for that language
+        if (!otherLanguagesFlat[newKeyForLanguageCode]) {
+          otherLanguagesFlat[newKeyForLanguageCode] = ''
+        }
       }
 
-      // if (!otherLanguagesFlat[newKeyNl]) {
-      //   otherLanguagesFlat[newKeyNl] = ''
-      // }
+      const getValuesForEnabledLanguages = () => {
+        const keysForOtherLanguages: { [key: string]: string } = {}
 
-      if (!otherLanguagesFlat[newKeyFr]) {
-        otherLanguagesFlat[newKeyFr] = ''
-      }
+        otherLanguageCodes.forEach((languageCode) => {
+          keysForOtherLanguages[languageCode] =
+            otherLanguagesFlat[`${languageCode}.${namespace}.${key}`]
+        })
 
-      if (!otherLanguagesFlat[newKeyNb]) {
-        otherLanguagesFlat[newKeyNb] = ''
-      }
-
-      if (!otherLanguagesFlat[newKeyEt]) {
-        otherLanguagesFlat[newKeyEt] = ''
+        return sort({
+          en: mainLanguageFlat[keyEn],
+          ...keysForOtherLanguages,
+        })
       }
 
       if (normalizedObject[namespace]) {
-        normalizedObject[namespace][key] = {
-          de: otherLanguagesFlat[newKeyDe],
-          en: mainLanguageFlat[keyEn],
-          et: otherLanguagesFlat[newKeyEt],
-          fr: otherLanguagesFlat[newKeyFr],
-          nb: otherLanguagesFlat[newKeyNb],
-          nl: otherLanguagesFlat[newKeyNl],
-        }
+        normalizedObject[namespace][key] = getValuesForEnabledLanguages()
       } else {
         normalizedObject[namespace] = {
-          [key]: {
-            de: otherLanguagesFlat[newKeyDe],
-            en: mainLanguageFlat[keyEn],
-            et: otherLanguagesFlat[newKeyEt],
-            fr: otherLanguagesFlat[newKeyFr],
-            nb: otherLanguagesFlat[newKeyNb],
-            nl: otherLanguagesFlat[newKeyNl],
-          },
+          [key]: getValuesForEnabledLanguages(),
         }
       }
     }
