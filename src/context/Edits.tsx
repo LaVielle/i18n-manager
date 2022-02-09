@@ -109,6 +109,7 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     const mainLanguageCode = 'en'
 
     // TODO: finalize this option that allows to control whether to create empty keys if missing for given languages.
+    // @ts-ignore
     const disabledLanguageCodes = ['nl']
 
     const otherLanguageCodes = allLanguageCodes.filter((el) => el !== mainLanguageCode)
@@ -154,8 +155,10 @@ export const EditsContextProvider: React.FC = ({ children }) => {
       }
 
       if (normalizedObject[namespace]) {
+        // @ts-ignore
         normalizedObject[namespace][key] = getValuesForEnabledLanguages()
       } else {
+        // @ts-ignore
         normalizedObject[namespace] = {
           [key]: getValuesForEnabledLanguages(),
         }
