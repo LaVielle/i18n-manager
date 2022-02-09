@@ -35,6 +35,7 @@ type EditsContextType = {
   formattedTranslations: NormalizedObject | null
   addSourceFile: (translations: SourceDataObject) => void
   downloadTargetJson: () => void
+  clearAllTranslationsAndEdits: () => void
 }
 
 const EditsContext = React.createContext<EditsContextType>({} as EditsContextType)
@@ -90,6 +91,14 @@ export const EditsContextProvider: React.FC = ({ children }) => {
       },
     }
   }, {})
+
+  const clearAllTranslationsAndEdits = () => {
+    setNumberOfEdits(0)
+    setSourceFlatTranslations({})
+    setFormattedTranslations(null)
+    setAllEdits({})
+    setKeysWithRealDiff({})
+  }
 
   const addSourceFile = (translations: SourceDataObject) => {
     if (Object.keys(translations).length === 0) {
@@ -224,6 +233,7 @@ export const EditsContextProvider: React.FC = ({ children }) => {
         namespacesWithRealDiff,
         emptyKeys,
         downloadTargetJson,
+        clearAllTranslationsAndEdits,
       }}
     >
       {children}

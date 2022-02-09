@@ -1,6 +1,8 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 
+import { ActionButton } from '../components/ActionButton'
 import { AnimatedSidebarItem } from '../components/AnimatedSidebarItem'
+import { ClearTranslationsModal } from '../components/ClearTranslationsModal'
 import { EditsSummaryFooter } from '../components/EditsSummaryFooter'
 import { StickyNamespaceHeader } from '../components/StickyNamespaceHeader'
 import { TranslationBox } from '../components/TranslationBox'
@@ -10,6 +12,7 @@ export default function Index() {
   const { formattedTranslations, namespacesWithRealDiff, emptyKeys } = useEdits()
 
   const sectionRefs = useRef<{ [key: string]: HTMLElement | null }>({}).current
+  const [showClearTranslationsModal, setShowClearTranslationsModal] = useState(false)
 
   const scrollToNamespaceSection = (namespace: string) => {
     const sectionId = `namespaceSection-${namespace}`
@@ -26,7 +29,7 @@ export default function Index() {
 
   return (
     <div className="flex">
-      <div className="h-screen w-56 bg-gray-800 py-8 px-4 overflow-scroll space-y-2">
+      <div className="h-screen w-64 bg-gray-800 py-8 px-4 overflow-scroll space-y-2">
         {Object.keys(formattedTranslations).map((namespace) => {
           const namespaceHasEmptyKeys = emptyKeys[namespace].hasEmptyKeys
           const namespaceHasEdits = !!namespacesWithRealDiff[namespace]
@@ -47,6 +50,15 @@ export default function Index() {
             />
           )
         })}
+        <ActionButton
+          label={'Clear translations 🗑'}
+          onClick={() => setShowClearTranslationsModal(true)}
+          className="sticky bottom-0 bg-red-500 hover:bg-red-400"
+        />
+        <ClearTranslationsModal
+          show={showClearTranslationsModal}
+          onClose={() => setShowClearTranslationsModal(false)}
+        />
       </div>
 
       <div className="flex flex-1 flex-col h-screen overflow-scroll">
