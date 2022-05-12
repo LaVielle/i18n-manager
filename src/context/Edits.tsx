@@ -46,6 +46,12 @@ export const EditsContextProvider: React.FC = ({ children }) => {
   const [numberOfEdits, setNumberOfEdits] = useState(0)
 
   // state to hold the original translation file, as it was before edits
+  const [sourceMetadata, setSourceMetadata] = useLocalStorage<Record<string, unknown>>(
+    'sourceMetadata',
+    {}
+  )
+
+  // state to hold the original translation file, as it was before edits
   const [sourceFlatTranslations, setSourceFlatTranslations] = useLocalStorage<
     Record<string, unknown>
   >('sourceFlatTranslations', {})
@@ -94,6 +100,7 @@ export const EditsContextProvider: React.FC = ({ children }) => {
 
   const clearAllTranslationsAndEdits = () => {
     setNumberOfEdits(0)
+    setSourceMetadata({})
     setSourceFlatTranslations({})
     setFormattedTranslations(null)
     setAllEdits({})
@@ -102,8 +109,16 @@ export const EditsContextProvider: React.FC = ({ children }) => {
 
   const addSourceFile = (translations: SourceDataObject) => {
     if (Object.keys(translations).length === 0) {
-      return setSourceFlatTranslations({})
+      setSourceFlatTranslations({})
+      setSourceFlatTranslations({})
+      return
     }
+
+    // Save source __metadata to localStorage and then delete it from the object,
+    // so that it does not interfere for the flattening code
+    // (because __metadata does not have the same lng>ns>key structure).
+    setSourceMetadata(translations.__metadata)
+    delete translations.__metadata
 
     const allLanguageCodes = Object.keys(translations)
     const mainLanguageCode = 'en'
@@ -217,7 +232,10 @@ export const EditsContextProvider: React.FC = ({ children }) => {
     const sorted = await sortAsync(unflattenedTranslations, true)
 
     exportFromJSON({
-      data: sorted,
+      data: {
+        ...sourceMetadata,
+        ...sorted,
+      },
       fileName: `translations-${Date.now()}`,
       exportType: 'json',
     })

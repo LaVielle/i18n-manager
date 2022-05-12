@@ -1,4 +1,7 @@
 {
+  "__metadata": {
+    "version": 1
+  },
   "en": {
     "Common": {
       "APP_IDENTIFIER": "vytal",
@@ -2054,54 +2057,7 @@
     }
   },
   "nl": {
-    "Common": {
-      "APP_IDENTIFIER": "vytal",
-      "hello": "Hallo",
-      "username": "Gebruikersnaam",
-      "skip": "overslaan",
-      "next": "volgende",
-      "back": "terug",
-      "confirm": "bevestigen",
-      "maybeLater": "misschien later",
-      "save": "opslaan",
-      "warning": "Waarschuwing",
-      "error": "Fout",
-      "firstName": "Voornaam",
-      "lastName": "Achternaam",
-      "email": "E-mail",
-      "send": "verzenden",
-      "signIn": "Inloggen",
-      "signUp": "Aanmelden",
-      "or": "of",
-      "phoneNumber": "Telefoonnummer",
-      "yes": "Ja",
-      "no": "Nee",
-      "noThanks": "Nee, bedankt",
-      "somethingWentWrong": "Er is iets mis gegaan, probeer het alstublieft opnieuw",
-      "thanks": "Bedankt",
-      "you": "Jij",
-      "order": "bestellen",
-      "linkNotValid": "Deze link is niet meer geldig",
-      "proceed": "Doorgaan",
-      "oops": "Oops",
-      "whatDoYouWantToDo": "Wat wil je doen?",
-      "leave": "Vertrekken",
-      "cancel": "Annuleren",
-      "madeBy": "met 💚 gemaakt door VYTAL",
-      "areYouSure": "Weet je het zeker?",
-      "vytalSlogan": "No waste.\nPure taste.",
-      "comingSoon": "Coming soon",
-      "copy": "Kopiëren",
-      "copied": "Gekopieerd!",
-      "continue": "Doorgaan",
-      "okay": "Oke",
-      "required": "verplicht",
-      "change": "Veranderen",
-      "reopensOnThe": "Vanaf {{date}} staan we weer voor je klaar",
-      "finished": "Klaar!",
-      "retry": "Opnieuw proberen",
-      "close": "Close"
-    },
+
     "Onboarding": {
       "simple": "gemakkelijk",
       "product": "product",
