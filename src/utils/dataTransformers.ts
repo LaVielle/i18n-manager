@@ -8,6 +8,30 @@ export const getDataFromFlatKeyId = (flatKey: string) => {
 }
 
 /**
+ * getFlatKeyId
+ *
+ * Returns a formatted key id given a language, namespace, and key.
+ * For example:
+ *  getFlatKeyId({
+ *    language: 'en',
+ *    namespace: 'Common',
+ *    key: 'hello',
+ *  })
+ * Returns:
+ *  "en.Common.hello"
+ *
+ * */
+export const getFlatKeyId = ({
+  language,
+  namespace,
+  key,
+}: {
+  language: string
+  namespace: string
+  key: string
+}) => `${language}.${namespace}.${key}`
+
+/**
  * flattenObject
  *
  * returns a flattened object. Used to flatten the translation objects, to make them easier to loop over.

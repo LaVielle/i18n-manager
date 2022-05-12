@@ -36,6 +36,7 @@ type EditsContextType = {
   addSourceFile: (translations: SourceDataObject) => void
   downloadTargetJson: () => void
   clearAllTranslationsAndEdits: () => void
+  mainLanguage: string
 }
 
 const EditsContext = React.createContext<EditsContextType>({} as EditsContextType)
@@ -255,6 +256,7 @@ export const EditsContextProvider: React.FC = ({ children }) => {
         emptyKeys,
         downloadTargetJson,
         clearAllTranslationsAndEdits,
+        mainLanguage: 'en',
       }}
     >
       {children}

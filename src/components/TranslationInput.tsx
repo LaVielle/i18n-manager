@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { useEdits } from '../context/Edits'
-import { getDataFromFlatKeyId } from '../utils/dataTransformers'
+import { getDataFromFlatKeyId, getFlatKeyId } from '../utils/dataTransformers'
 import { useDebounce } from '../utils/debounce'
 
 type Props = {
@@ -11,12 +11,28 @@ type Props = {
 }
 
 export const TranslationInput: React.FC<Props> = ({ translationId, language, translation }) => {
-  const { setEdit, keysWithRealDiff, emptyKeys, sourceFlatTranslations } = useEdits()
+  const { setEdit, keysWithRealDiff, emptyKeys, sourceFlatTranslations, mainLanguage } = useEdits()
 
-  const { namespace } = getDataFromFlatKeyId(translationId)
+  const { namespace, key } = getDataFromFlatKeyId(translationId)
 
   const keyIsEmpty = !!emptyKeys[namespace][translationId]
   const keyHasRealDiff = !!keysWithRealDiff[translationId]
+  const keyValue = keyHasRealDiff
+    ? keysWithRealDiff[translationId]
+    : sourceFlatTranslations[translationId]
+
+  const isMainLanguage = language === mainLanguage
+  let isSameAsMainLanguage = false
+
+  if (!isMainLanguage) {
+    const mainLanguageId = getFlatKeyId({ language: mainLanguage, namespace, key })
+    const mainLanguageHadRealDiff = !!keysWithRealDiff[mainLanguageId]
+    const mainLanguageKeyValue = mainLanguageHadRealDiff
+      ? keysWithRealDiff[mainLanguageId]
+      : sourceFlatTranslations[mainLanguageId]
+
+    isSameAsMainLanguage = !isMainLanguage && keyValue === mainLanguageKeyValue
+  }
 
   let borderColorClass = 'border-gray-300'
   if (keyIsEmpty) {
@@ -43,7 +59,12 @@ export const TranslationInput: React.FC<Props> = ({ translationId, language, tra
           onChange={onChange}
         />
         {keyHasRealDiff && (
-          <p className="text-red-300 pt-1">Changed from: {sourceFlatTranslations[translationId]}</p>
+          <p className="text-green-400 pt-1">
+            Changed from: {sourceFlatTranslations[translationId]}
+          </p>
+        )}
+        {isSameAsMainLanguage && (
+          <p className="text-yellow-500 pt-1">Warning: Same as main language</p>
         )}
       </div>
     </>
