@@ -234,7 +234,7 @@ export const EditsContextProvider: React.FC = ({ children }) => {
 
     exportFromJSON({
       data: {
-        ...sourceMetadata,
+        __metadata: sourceMetadata,
         ...sorted,
       },
       fileName: `translations-${Date.now()}`,
